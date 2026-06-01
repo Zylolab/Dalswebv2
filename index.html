@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DGC67 — Dals Gamos Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #040404;
+    --deep: #080808;
+    --gold: #c9a84c;
+    --gold2: #e8c96b;
+    --gold3: #f0dfa0;
+    --white: #f5f0e8;
+    --grey: #777;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--black); color:var(--white); font-family:'Cormorant Garamond',serif; overflow-x:hidden; cursor:none; }
+  ::-webkit-scrollbar { width:3px; }
+  ::-webkit-scrollbar-track { background:var(--black); }
+  ::-webkit-scrollbar-thumb { background:var(--gold); }
+
+  /* CURSOR */
+  .cursor { width:8px; height:8px; background:var(--gold); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .15s; }
+  .cursor-ring { width:34px; height:34px; border:1px solid rgba(201,168,76,.5); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .25s; }
+
+  /* NAV */
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:22px 48px; background:linear-gradient(to bottom,rgba(4,4,4,.96),transparent); backdrop-filter:blur(4px); transition:background .4s; }
+  .logo-wrap { display:flex; align-items:center; gap:14px; }
+  .logo-svg { width:50px; height:50px; }
+  .logo-texts { display:flex; flex-direction:column; line-height:1; }
+  .logo-dgc { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:6px; color:var(--gold); }
+  .logo-sub { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--grey); text-transform:uppercase; margin-top:2px; }
+  .nav-links { display:flex; gap:36px; list-style:none; }
+  .nav-links a { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--grey); text-decoration:none; text-transform:uppercase; transition:color .3s; position:relative; }
+  .nav-links a::after { content:''; position:absolute; bottom:-4px; left:0; right:0; height:1px; background:var(--gold); transform:scaleX(0); transition:transform .3s; }
+  .nav-links a:hover { color:var(--gold3); }
+  .nav-links a:hover::after { transform:scaleX(1); }
+  .nav-cta { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:var(--black); background:var(--gold); border:none; padding:12px 24px; cursor:none; text-transform:uppercase; text-decoration:none; transition:background .3s; }
+  .nav-cta:hover { background:var(--gold2); }
+
+  /* ===== HERO ===== */
+  .hero { height:100vh; position:relative; display:flex; align-items:flex-end; overflow:hidden; }
+  .hero-bg {
+    position:absolute; inset:0; z-index:0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 55%, rgba(201,168,76,.07) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 70%, rgba(201,168,76,.04) 0%, transparent 50%),
+      linear-gradient(135deg, #040404 0%, #0d0b07 35%, #131008 55%, #080707 100%);
+  }
+  .hero-grid {
+    position:absolute; inset:0; z-index:0; overflow:hidden;
+    background: linear-gradient(rgba(201,168,76,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,.04) 1px, transparent 1px);
+    background-size:80px 80px;
+    mask-image:linear-gradient(to top, rgba(0,0,0,.3) 0%, transparent 60%);
+    transform:perspective(600px) rotateX(20deg) scale(1.4);
+    transform-origin:bottom center;
+  }
+  .hero-car { position:absolute; right:-2%; bottom:10%; width:68%; max-width:900px; z-index:1; animation:float 7s ease-in-out infinite; filter:drop-shadow(0 0 60px rgba(201,168,76,.15)) drop-shadow(0 40px 80px rgba(0,0,0,.8)); }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .hero-glow { position:absolute; right:5%; bottom:8%; width:55%; height:8px; background:radial-gradient(ellipse, rgba(201,168,76,.3) 0%, transparent 70%); z-index:1; animation:glowPulse 7s ease-in-out infinite; filter:blur(8px); }
+  @keyframes glowPulse { 0%,100%{opacity:.5;transform:scaleX(1)} 50%{opacity:.8;transform:scaleX(.95)} }
+  .hero-overlay { position:absolute; inset:0; z-index:2; background:linear-gradient(to right, rgba(4,4,4,.95) 0%, rgba(4,4,4,.7) 45%, rgba(4,4,4,.1) 75%, transparent 100%), linear-gradient(to top, rgba(4,4,4,.7) 0%, transparent 40%); }
+  .hero-lines { position:absolute; left:0; top:0; bottom:0; width:4px; z-index:3; background:linear-gradient(to bottom, transparent, var(--gold), transparent); opacity:.4; }
+  .hero-content { position:relative; z-index:4; padding:0 48px 80px; max-width:680px; animation:fadeUp 1.2s ease forwards; opacity:0; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+  .hero-badge { display:inline-flex; align-items:center; gap:12px; font-family:'Space Mono',monospace; font-size:10px; letter-spacing:5px; color:var(--gold); text-transform:uppercase; margin-bottom:22px; }
+  .hero-badge::before { content:''; display:block; width:36px; height:1px; background:var(--gold); }
+  .hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(70px,11vw,140px); line-height:.88; letter-spacing:4px; margin-bottom:6px; }
+  .hero-title .gold { color:var(--gold); display:block; }
+  .hero-desc { font-size:17px; font-weight:300; font-style:italic; color:rgba(245,240,232,.55); line-height:1.8; max-width:400px; margin:28px 0 44px; }
+  .hero-btns { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+  .btn-gold { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; background:var(--gold); color:var(--black); padding:15px 36px; text-decoration:none; display:inline-block; transition:background .3s,transform .2s; cursor:none; }
+  .btn-gold:hover { background:var(--gold2); transform:translateY(-2px); }
+  .btn-outline { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:2px; transition:color .3s; cursor:none; }
+  .btn-outline:hover { color:var(--gold3); }
+  .hero-scroll { position:absolute; right:48px; bottom:48px; z-index:4; display:flex; flex-direction:column; align-items:center; gap:10px; font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--grey); text-transform:uppercase; animation:fadeUp 1.8s ease forwards; opacity:0; }
+  .scroll-line { width:1px; height:56px; background:linear-gradient(to bottom,var(--gold),transparent); animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+  /* STATS */
+  .stats { background:var(--gold); padding:22px 48px; display:flex; justify-content:space-around; align-items:center; flex-wrap:wrap; gap:16px; }
+  .stat { display:flex; align-items:center; gap:14px; }
+  .stat-n { font-family:'Bebas Neue',sans-serif; font-size:38px; color:var(--black); line-height:1; }
+  .stat-l { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:rgba(4,4,4,.55); text-transform:uppercase; }
+  .stat-sep { width:1px; height:40px; background:rgba(4,4,4,.18); }
+
+  /* SECTIONS */
+  .sec { padding:100px 48px; }
+  .sec-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:5px; color:var(--gold); text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:12px; }
+  .sec-label::before { content:''; display:block; width:22px; height:1px; background:var(--gold); }
+  .sec-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(46px,6vw,80px); letter-spacing:3px; line-height:.92; color:var(--white); margin-bottom:32px; }
+  .sec-title .g { color:var(--gold); }
+
+  /* ABOUT */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+  .about-text p { font-size:17px; font-weight:300; line-height:1.85; color:rgba(245,240,232,.6); margin-bottom:18px; }
+  .about-text strong { color:var(--gold); font-weight:400; }
+  .about-nums { display:flex; gap:28px; margin-top:32px; flex-wrap:wrap; }
+  .about-num-item .n { font-family:'Bebas Neue',sans-serif; font-size:40px; color:var(--gold); line-height:1; }
+  .about-num-item .l { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; }
+  .car-visual { position:relative; width:100%; aspect-ratio:4/3; background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(201,168,76,.09) 0%, transparent 60%), linear-gradient(135deg, #0f0e0b 0%, #1a1710 40%, #0c0b09 100%); border:1px solid rgba(201,168,76,.12); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .car-visual::before { content:''; position:absolute; inset:0; background: linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px), linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px); background-size:40px 40px; opacity:.5; }
+  .car-visual::after { content:'DGC67'; position:absolute; bottom:0; right:0; font-family:'Bebas Neue',sans-serif; font-size:80px; letter-spacing:4px; color:rgba(201,168,76,.06); line-height:1; padding:8px 12px; }
+  .car-visual-inner { position:relative; z-index:1; width:85%; }
+  .car-visual-tag { position:absolute; bottom:-18px; right:-18px; background:var(--gold); color:var(--black); font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px; padding:14px 18px; z-index:2; }
+  .car-visual-border { position:absolute; top:-14px; left:-14px; right:14px; bottom:14px; border:1px solid rgba(201,168,76,.25); pointer-events:none; }
+
+  /* SERVICES */
+  .services-sec { background:var(--deep); position:relative; overflow:hidden; }
+  .services-sec::before { content:'DGC'; position:absolute; right:-60px; top:50%; transform:translateY(-50%); font-family:'Bebas Neue',sans-serif; font-size:340px; color:rgba(201,168,76,.025); line-height:1; pointer-events:none; }
+  .svc-head { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:56px; flex-wrap:wrap; gap:20px; }
+  .svc-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+  .svc-card { background:rgba(255,255,255,.02); border:1px solid rgba(201,168,76,.07); padding:44px 34px; position:relative; overflow:hidden; transition:all .4s; cursor:none; }
+  .svc-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .svc-card:hover { background:rgba(201,168,76,.05); border-color:rgba(201,168,76,.22); }
+  .svc-card:hover::after { transform:scaleX(1); }
+  .svc-n { font-family:'Bebas Neue',sans-serif; font-size:60px; color:rgba(201,168,76,.1); line-height:1; margin-bottom:18px; transition:color .4s; }
+  .svc-card:hover .svc-n { color:rgba(201,168,76,.22); }
+  .svc-icon { margin-bottom:18px; }
+  .svc-icon svg { width:34px; height:34px; }
+  .svc-name { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--white); margin-bottom:10px; }
+  .svc-desc { font-size:14px; font-weight:300; font-style:italic; color:var(--grey); line-height:1.75; }
+
+  /* VEHICLES / RÉALISATIONS */
+  .cars-sec { padding:100px 0; background:var(--black); overflow:hidden; }
+  .cars-head { padding:0 48px; margin-bottom:56px; }
+  .cars-scroll { display:flex; gap:20px; padding:0 48px; overflow-x:auto; scroll-snap-type:x mandatory; -ms-overflow-style:none; scrollbar-width:none; }
+  .cars-scroll::-webkit-scrollbar { display:none; }
+  .car-card { flex:0 0 340px; scroll-snap-align:start; position:relative; aspect-ratio:3/4; overflow:hidden; cursor:none; transition:transform .4s; }
+  .car-card:hover { transform:scale(1.02); }
+  .car-card .car-bg { position:absolute; inset:0; transition:filter .5s; }
+  .car-card:hover .car-bg { filter:brightness(1.1); }
+  .car-card-1 .car-bg { background: radial-gradient(ellipse 90% 60% at 50% 70%, rgba(255,80,20,.12) 0%, transparent 60%), linear-gradient(160deg, #0e0a08 0%, #1a0f08 40%, #2a1408 60%, #0f0907 100%); }
+  .car-card-2 .car-bg { background: radial-gradient(ellipse 80% 50% at 50% 70%, rgba(20,80,180,.12) 0%, transparent 60%), linear-gradient(160deg, #080c14 0%, #0d1520 40%, #101a28 60%, #080c14 100%); }
+  .car-card-3 .car-bg { background: radial-gradient(ellipse 80% 50% at 50% 70%, rgba(200,200,200,.1) 0%, transparent 60%), linear-gradient(160deg, #0d0d0d 0%, #181818 40%, #1f1f1f 60%, #0d0d0d 100%); }
+  .car-card-4 .car-bg { background: radial-gradient(ellipse 80% 50% at 50% 70%, rgba(0,180,100,.1) 0%, transparent 60%), linear-gradient(160deg, #08100c 0%, #0e1a12 40%, #131f16 60%, #08100c 100%); }
+  .car-card-5 .car-bg { background: radial-gradient(ellipse 90% 60% at 50% 70%, rgba(220,30,30,.13) 0%, transparent 60%), linear-gradient(160deg, #0f0808 0%, #1e0c0c 40%, #280f0f 60%, #0f0808 100%); }
+  .car-card-6 .car-bg { background: radial-gradient(ellipse 80% 50% at 50% 70%, rgba(201,168,76,.12) 0%, transparent 60%), linear-gradient(160deg, #100f08 0%, #1a1810 40%, #201e12 60%, #100f08 100%); }
+  .car-light { position:absolute; z-index:2; border-radius:50%; filter:blur(12px); animation:lightPulse 3s ease-in-out infinite; }
+  @keyframes lightPulse { 0%,100%{opacity:.5} 50%{opacity:.9} }
+  .car-card-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(4,4,4,.92) 0%, rgba(4,4,4,.3) 50%, transparent 100%); z-index:3; }
+  .car-card-featured::before { content:'FEATURED'; position:absolute; top:18px; right:18px; background:var(--gold); color:var(--black); font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; padding:4px 10px; z-index:5; }
+  .car-card-featured { border:2px solid rgba(201,168,76,.3); }
+  .car-card-svg { position:absolute; bottom:22%; left:50%; transform:translateX(-50%); width:82%; z-index:2; filter:drop-shadow(0 10px 30px rgba(0,0,0,.7)); transition:transform .5s; }
+  .car-card:hover .car-card-svg { transform:translateX(-50%) scale(1.05) translateY(-6px); }
+  .car-info { position:absolute; bottom:0; left:0; right:0; padding:28px; z-index:4; transform:translateY(6px); transition:transform .4s; }
+  .car-card:hover .car-info { transform:translateY(0); }
+  .car-brand { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px; color:var(--gold); text-transform:uppercase; margin-bottom:6px; }
+  .car-name { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:2px; color:var(--white); }
+  .car-service { font-size:13px; font-style:italic; font-weight:300; color:rgba(245,240,232,.5); margin-top:4px; }
+  .car-tag { display:inline-block; margin-top:8px; font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--black); background:var(--gold); padding:4px 10px; text-transform:uppercase; opacity:0; transition:opacity .3s .1s; }
+  .car-card:hover .car-tag { opacity:1; }
+  .car-deco { position:absolute; top:24px; left:24px; right:24px; height:1px; background:linear-gradient(to right,transparent,rgba(201,168,76,.3),transparent); z-index:3; opacity:0; transition:opacity .4s; }
+  .car-card:hover .car-deco { opacity:1; }
+
+  /* FORMULES */
+  .formules-sec { background:var(--deep); position:relative; overflow:hidden; }
+  .formules-sec::before { content:'DGC'; position:absolute; right:-60px; top:50%; transform:translateY(-50%); font-family:'Bebas Neue',sans-serif; font-size:340px; color:rgba(201,168,76,.02); line-height:1; pointer-events:none; }
+  .formules-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:56px; }
+  .formule-card { background:rgba(255,255,255,.02); border:1px solid rgba(201,168,76,.08); padding:52px 40px; position:relative; overflow:hidden; transition:all .4s; cursor:none; }
+  .formule-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--gold); transform:scaleX(0); transform-origin:left; transition:transform .4s; }
+  .formule-card:hover { background:rgba(201,168,76,.05); border-color:rgba(201,168,76,.25); }
+  .formule-card:hover::after { transform:scaleX(1); }
+  .formule-card.featured { border-color:rgba(201,168,76,.3); background:rgba(201,168,76,.04); }
+  .formule-card.featured::before { content:'POPULAIRE'; position:absolute; top:20px; right:20px; background:var(--gold); color:var(--black); font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; padding:4px 10px; }
+  .formule-num { font-family:'Bebas Neue',sans-serif; font-size:60px; color:rgba(201,168,76,.1); line-height:1; margin-bottom:16px; }
+  .formule-name { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px; color:var(--white); margin-bottom:24px; }
+  .formule-items { list-style:none; margin-bottom:32px; }
+  .formule-items li { font-size:14px; font-weight:300; font-style:italic; color:var(--grey); line-height:1.75; padding:8px 0; border-bottom:1px solid rgba(201,168,76,.06); display:flex; align-items:center; gap:10px; }
+  .formule-items li::before { content:'—'; color:var(--gold); font-style:normal; }
+  .formule-price { font-family:'Bebas Neue',sans-serif; font-size:42px; letter-spacing:2px; color:var(--gold); line-height:1; }
+  .formule-price small { font-size:18px; color:var(--grey); font-family:'Cormorant Garamond',serif; font-style:italic; }
+
+  /* PROCESS */
+  .process-sec { background:linear-gradient(135deg,var(--deep),var(--black)); }
+  .process-grid { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid rgba(201,168,76,.1); margin-top:56px; }
+  .process-step { padding:44px 30px; border-right:1px solid rgba(201,168,76,.1); position:relative; transition:background .4s; }
+  .process-step:last-child { border-right:none; }
+  .process-step:hover { background:rgba(201,168,76,.04); }
+  .process-arrow { position:absolute; right:-13px; top:50%; transform:translateY(-50%); width:26px; height:26px; background:var(--gold); display:flex; align-items:center; justify-content:center; z-index:1; font-size:11px; color:var(--black); }
+  .process-step:last-child .process-arrow { display:none; }
+  .process-num { font-family:'Bebas Neue',sans-serif; font-size:16px; color:var(--gold); letter-spacing:3px; margin-bottom:18px; }
+  .process-name { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:var(--white); margin-bottom:10px; }
+  .process-desc { font-size:13px; font-style:italic; font-weight:300; color:var(--grey); line-height:1.7; }
+
+  /* QUOTE */
+  .quote-sec { background:var(--gold); padding:80px 48px; text-align:center; position:relative; overflow:hidden; }
+  .quote-sec::before { content:'"'; position:absolute; top:-60px; left:50%; transform:translateX(-50%); font-family:'Cormorant Garamond',serif; font-size:340px; color:rgba(4,4,4,.07); line-height:1; pointer-events:none; }
+  .quote-text { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,3vw,34px); font-style:italic; font-weight:300; color:var(--black); line-height:1.55; max-width:780px; margin:0 auto 28px; position:relative; z-index:1; }
+  .quote-author { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px; color:rgba(4,4,4,.45); text-transform:uppercase; }
+
+  /* CONTACT */
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; min-height:600px; }
+  .contact-left { background:var(--deep); padding:80px 48px; display:flex; flex-direction:column; justify-content:center; }
+  .contact-items { margin-top:40px; display:flex; flex-direction:column; gap:26px; }
+  .c-item { display:flex; align-items:flex-start; gap:18px; }
+  .c-icon { width:40px; height:40px; border:1px solid rgba(201,168,76,.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .c-icon svg { width:17px; height:17px; }
+  .c-label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; color:var(--gold); text-transform:uppercase; margin-bottom:4px; }
+  .c-val { font-size:16px; font-weight:300; color:var(--white); }
+  .c-val a { color:var(--white); text-decoration:none; transition:color .3s; }
+  .c-val a:hover { color:var(--gold); }
+  .contact-right { background:var(--gold); padding:80px 48px; display:flex; flex-direction:column; justify-content:center; }
+  .form-title { font-family:'Bebas Neue',sans-serif; font-size:44px; letter-spacing:3px; color:var(--black); margin-bottom:32px; line-height:1; }
+  .fg { margin-bottom:18px; }
+  .fg input,.fg textarea,.fg select { width:100%; background:rgba(4,4,4,.08); border:none; border-bottom:2px solid rgba(4,4,4,.3); padding:13px 14px; font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--black); outline:none; transition:border-color .3s; cursor:none; }
+  .fg input::placeholder,.fg textarea::placeholder { color:rgba(4,4,4,.38); font-style:italic; }
+  .fg input:focus,.fg textarea:focus,.fg select:focus { border-bottom-color:var(--black); }
+  .fg textarea { resize:none; height:90px; }
+  .fg select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23000' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; background-size:12px; background-color:rgba(4,4,4,.06); }
+  .fg label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; color:rgba(4,4,4,.5); text-transform:uppercase; display:block; margin-bottom:6px; }
+  .btn-dark { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; background:var(--black); color:var(--gold); border:none; padding:16px; cursor:none; width:100%; transition:background .3s; }
+  .btn-dark:hover { background:#1a1a1a; }
+
+  /* CALL FLOTTANT */
+  .call-float { position:fixed; bottom:24px; right:24px; background:var(--gold); color:var(--black); font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; text-decoration:none; padding:14px 20px; z-index:999; box-shadow:0 8px 32px rgba(201,168,76,.3); transition:background .3s,transform .2s; cursor:none; }
+  .call-float:hover { background:var(--gold2); transform:translateY(-2px); }
+
+  /* FOOTER */
+  footer { background:#020202; padding:44px 48px; display:flex; align-items:center; justify-content:space-between; border-top:1px solid rgba(201,168,76,.08); flex-wrap:wrap; gap:20px; }
+  .foot-logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:6px; color:var(--gold); }
+  .foot-links-nav { display:flex; gap:24px; flex-wrap:wrap; }
+  .foot-links-nav a { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--grey); text-decoration:none; text-transform:uppercase; transition:color .3s; }
+  .foot-links-nav a:hover { color:var(--gold); }
+  .foot-copy { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:rgba(255,255,255,.18); text-align:center; line-height:1.8; }
+  .foot-social { display:flex; gap:14px; }
+  .foot-social a { width:36px; height:36px; border:1px solid rgba(201,168,76,.18); display:flex; align-items:center; justify-content:center; text-decoration:none; color:var(--grey); transition:all .3s; cursor:none; }
+  .foot-social a:hover { border-color:var(--gold); color:var(--gold); background:rgba(201,168,76,.08); }
+
+  /* REVEAL */
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .8s ease,transform .8s ease; }
+  .reveal.on { opacity:1; transform:translateY(0); }
+  .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+
+  @media(max-width:900px){
+    nav{padding:18px 20px;} .nav-links{display:none;}
+    .sec{padding:60px 20px;} .hero-content{padding:0 20px 60px;}
+    .about-grid,.contact-grid{grid-template-columns:1fr; gap:40px;}
+    .svc-grid,.formules-grid{grid-template-columns:1fr;}
+    .process-grid{grid-template-columns:1fr 1fr;}
+    .cars-scroll{padding:0 20px;} .car-card{flex:0 0 260px;}
+    footer{flex-direction:column;text-align:center;}
+    .stats{padding:20px;} .hero-scroll{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="25,2 48,13 48,37 25,48 2,37 2,13" stroke="#c9a84c" stroke-width="1.4" fill="none"/>
+      <polygon points="25,8 42,17 42,33 25,42 8,33 8,17" stroke="#c9a84c" stroke-width=".5" fill="rgba(201,168,76,.05)"/>
+      <text x="25" y="30" font-family="Bebas Neue, sans-serif" font-size="13" fill="#c9a84c" text-anchor="middle" letter-spacing="1">DGC</text>
+    </svg>
+    <div class="logo-texts">
+      <span class="logo-dgc">DALS GAMOS</span>
+      <span class="logo-sub">Concept · 67 · Strasbourg</span>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#realisations">Réals</a></li>
+    <li><a href="#formules">Formules</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:0651140008" class="nav-cta">📞 Appeler</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <svg class="hero-car" viewBox="0 0 960 340" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#2a2218"/>
+        <stop offset="60%" stop-color="#1a1510"/>
+        <stop offset="100%" stop-color="#0d0b08"/>
+      </linearGradient>
+      <linearGradient id="goldEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="rgba(201,168,76,0)"/>
+        <stop offset="30%" stop-color="rgba(201,168,76,0.8)"/>
+        <stop offset="70%" stop-color="rgba(201,168,76,0.8)"/>
+        <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+      </linearGradient>
+      <radialGradient id="wheelGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="rgba(201,168,76,0.3)"/>
+        <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+      </radialGradient>
+      <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <ellipse cx="480" cy="330" rx="430" ry="14" fill="rgba(201,168,76,0.06)"/>
+    <path d="M80 255 L95 215 L140 195 L200 178 L270 162 L360 150 L440 142 L520 138 L600 136 L670 138 L730 142 L790 150 L840 162 L880 178 L900 210 L905 255 Z" fill="url(#bodyGrad)"/>
+    <path d="M200 178 L240 160 L300 148 L370 140 L440 135 L520 132 L600 130 L670 132 L730 136 L790 142 L840 155 L870 175 L840 178 L780 168 L720 160 L650 156 L580 154 L510 154 L440 156 L370 160 L300 168 L240 178 Z" fill="rgba(30,25,15,0.9)"/>
+    <path d="M370 140 L400 118 L440 108 L510 104 L580 106 L630 112 L660 122 L650 136 L600 130 L520 128 L440 130 L400 136 Z" fill="#1e1a10"/>
+    <path d="M375 138 L405 116 L445 106 L512 102 L582 104 L635 112 L655 122" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+    <path d="M370 140 L400 118 L510 108 L640 122 L620 138 L500 132 Z" fill="rgba(100,140,160,0.25)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+    <path d="M650 136 L660 122 L720 128 L750 138 L730 142 Z" fill="rgba(80,110,130,0.2)" stroke="rgba(201,168,76,0.2)" stroke-width=".8"/>
+    <path d="M120 230 Q400 210 880 225" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+    <path d="M80 255 L95 245 L120 238 L130 255 Z" fill="rgba(201,168,76,0.3)"/>
+    <path d="M870 255 L880 248 L905 250 L905 255 Z" fill="rgba(201,168,76,0.3)"/>
+    <path d="M320 162 L310 245" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width=".8"/>
+    <path d="M660 142 L665 250" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width=".8"/>
+    <path d="M720 160 L750 158 L760 175 L730 177 Z" fill="rgba(0,0,0,0.6)" stroke="rgba(201,168,76,0.3)" stroke-width=".8"/>
+    <path d="M855 190 L890 188 L898 205 L858 208 Z" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.6)" stroke-width="1"/>
+    <ellipse cx="878" cy="197" rx="18" ry="8" fill="rgba(201,168,76,0.25)" filter="url(#glow)"/>
+    <path d="M82 222 L94 218 L97 238 L84 238 Z" fill="rgba(220,50,30,0.6)" stroke="rgba(255,100,80,0.4)" stroke-width=".8"/>
+    <circle cx="220" cy="258" r="48" fill="#111" stroke="rgba(201,168,76,0.4)" stroke-width="2"/>
+    <circle cx="220" cy="258" r="38" fill="url(#wheelGlow)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+    <circle cx="220" cy="258" r="20" fill="#0d0b08" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+    <line x1="220" y1="220" x2="220" y2="238" stroke="rgba(201,168,76,0.6)" stroke-width="2"/><line x1="220" y1="278" x2="220" y2="296" stroke="rgba(201,168,76,0.6)" stroke-width="2"/>
+    <line x1="182" y1="258" x2="200" y2="258" stroke="rgba(201,168,76,0.6)" stroke-width="2"/><line x1="240" y1="258" x2="258" y2="258" stroke="rgba(201,168,76,0.6)" stroke-width="2"/>
+    <line x1="193" y1="231" x2="207" y2="245" stroke="rgba(201,168,76,0.5)" stroke-width="2"/><line x1="233" y1="271" x2="247" y2="285" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+    <line x1="247" y1="231" x2="233" y2="245" stroke="rgba(201,168,76,0.5)" stroke-width="2"/><line x1="193" y1="285" x2="207" y2="271" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+    <circle cx="220" cy="258" r="6" fill="rgba(201,168,76,0.8)"/>
+    <circle cx="740" cy="258" r="48" fill="#111" stroke="rgba(201,168,76,0.4)" stroke-width="2"/>
+    <circle cx="740" cy="258" r="38" fill="url(#wheelGlow)" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+    <circle cx="740" cy="258" r="20" fill="#0d0b08" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+    <line x1="740" y1="220" x2="740" y2="238" stroke="rgba(201,168,76,0.6)" stroke-width="2"/><line x1="740" y1="278" x2="740" y2="296" stroke="rgba(201,168,76,0.6)" stroke-width="2"/>
+    <line x1="702" y1="258" x2="720" y2="258" stroke="rgba(201,168,76,0.6)" stroke-width="2"/><line x1="760" y1="258" x2="778" y2="258" stroke="rgba(201,168,76,0.6)" stroke-width="2"/>
+    <line x1="713" y1="231" x2="727" y2="245" stroke="rgba(201,168,76,0.5)" stroke-width="2"/><line x1="753" y1="271" x2="767" y2="285" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+    <line x1="767" y1="231" x2="753" y2="245" stroke="rgba(201,168,76,0.5)" stroke-width="2"/><line x1="713" y1="285" x2="727" y2="271" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+    <circle cx="740" cy="258" r="6" fill="rgba(201,168,76,0.8)"/>
+    <path d="M82 238 L900 238" fill="none" stroke="url(#goldEdge)" stroke-width=".8" opacity=".6"/>
+  </svg>
+
+  <div class="hero-glow"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Strasbourg · DGC67 · Préparateur Auto</div>
+    <h1 class="hero-title">Ton Véhicule<br><span class="gold">Mérite Mieux.</span></h1>
+    <p class="hero-desc">Intérieur, extérieur, deux-roues, poids lourds — nettoyage et préparation haut de gamme à Strasbourg. Résultat showroom garanti.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-gold">Devis gratuit</a>
+      <a href="#formules" class="btn-outline">Nos formules</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-n">100%</div><div class="stat-l">Résultat<br>Garanti</div></div>
+  <div class="stat-sep"></div>
+  <div class="stat"><div class="stat-n">3</div><div class="stat-l">Formules<br>disponibles</div></div>
+  <div class="stat-sep"></div>
+  <div class="stat"><div class="stat-n">67</div><div class="stat-l">Bas-Rhin<br>Strasbourg</div></div>
+  <div class="stat-sep"></div>
+  <div class="stat"><div class="stat-n">★★★★★</div><div class="stat-l">Satisfaction<br>client</div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="sec-label">Notre identité</div>
+      <h2 class="sec-title">Ton Véhicule<br><span class="g">Comme Neuf,</span><br>On S'En<br>Occupe.</h2>
+      <p>Chez <strong>DalsGamos Concept</strong>, chaque véhicule est traité avec la même exigence. Nettoyage intérieur complet, préparation extérieure, rénovation optique — on intervient sur tous types de véhicules.</p>
+      <p>Basés au <strong>49 Rue du Gazon, 67200 Strasbourg</strong>. Paiement par carte de débit et sans contact accepté.</p>
+      <div class="about-nums">
+        <div class="about-num-item"><div class="n">DGC</div><div class="l">La marque</div></div>
+        <div class="about-num-item"><div class="n">#67</div><div class="l">Strasbourg</div></div>
+        <div class="about-num-item"><div class="n">PRO</div><div class="l">Expertise</div></div>
+      </div>
+    </div>
+    <div class="reveal d2" style="position:relative">
+      <div class="car-visual-border"></div>
+      <div class="car-visual">
+        <div class="car-visual-inner">
+          <svg viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="aGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2a2010"/><stop offset="100%" stop-color="#0d0b07"/></linearGradient></defs>
+            <ellipse cx="250" cy="172" rx="230" ry="8" fill="rgba(201,168,76,0.1)"/>
+            <path d="M40 140 L52 112 L80 100 L130 88 L190 80 L250 76 L310 74 L370 76 L420 82 L460 96 L475 116 L478 140Z" fill="url(#aGrad)"/>
+            <path d="M130 88 L148 72 L180 62 L250 58 L320 60 L360 68 L380 78 L340 82 L280 78 L220 78 L170 82 Z" fill="rgba(35,28,14,0.9)"/>
+            <path d="M155 74 L175 58 L250 52 L325 56 L345 68 L310 72 L250 68 L190 70Z" fill="rgba(100,140,160,0.2)" stroke="rgba(201,168,76,0.3)" stroke-width=".8"/>
+            <path d="M42 130 L476 128" fill="none" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+            <circle cx="120" cy="143" r="28" fill="#111" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+            <circle cx="120" cy="143" r="14" fill="#0d0b08" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+            <line x1="120" y1="129" x2="120" y2="139" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="120" y1="147" x2="120" y2="157" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="106" y1="143" x2="116" y2="143" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="124" y1="143" x2="134" y2="143" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <circle cx="120" cy="143" r="4" fill="rgba(201,168,76,0.9)"/>
+            <circle cx="380" cy="143" r="28" fill="#111" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+            <circle cx="380" cy="143" r="14" fill="#0d0b08" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+            <line x1="380" y1="129" x2="380" y2="139" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="380" y1="147" x2="380" y2="157" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="366" y1="143" x2="376" y2="143" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <line x1="384" y1="143" x2="394" y2="143" stroke="rgba(201,168,76,0.7)" stroke-width="1.5"/>
+            <circle cx="380" cy="143" r="4" fill="rgba(201,168,76,0.9)"/>
+            <path d="M455 112 L472 110 L477 124 L458 126Z" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.6)" stroke-width=".8"/>
+            <ellipse cx="465" cy="117" rx="10" ry="4" fill="rgba(201,168,76,0.2)" filter="blur(4px)"/>
+          </svg>
+        </div>
+      </div>
+      <div class="car-visual-tag">DGC67</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec services-sec" id="services">
+  <div class="svc-head">
+    <div>
+      <div class="sec-label reveal">Nos prestations</div>
+      <h2 class="sec-title reveal">Ce Que<br><span class="g">Nous Faisons</span></h2>
+    </div>
+    <a href="#contact" class="btn-gold reveal">Devis gratuit</a>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card reveal">
+      <div class="svc-n">01</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="18" cy="18" r="14"/><path d="M8 18C8 13 13 10 18 10s10 3 10 8"/><path d="M12 22q6 5 12 0"/><circle cx="14" cy="16" r="1.5" fill="#c9a84c"/><circle cx="22" cy="16" r="1.5" fill="#c9a84c"/></svg></div>
+      <div class="svc-name">Intérieur Complet</div>
+      <div class="svc-desc">Aspiration complète, plastiques nettoyés, vitres intérieures, odeurs supprimées.</div>
+    </div>
+    <div class="svc-card reveal d1">
+      <div class="svc-n">02</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M18 4l14 8v16l-14 8L4 28V12z"/><path d="M18 9l9 5v10l-9 5-9-5V14z"/><circle cx="18" cy="18" r="3" fill="rgba(201,168,76,.5)"/></svg></div>
+      <div class="svc-name">Extérieur Premium</div>
+      <div class="svc-desc">Lavage détaillé, jantes, pneus, carrosserie décontaminée, finition brillante éclat showroom.</div>
+    </div>
+    <div class="svc-card reveal d2">
+      <div class="svc-n">03</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="18" cy="12" r="6"/><path d="M6 30c0-6.627 5.373-12 12-12s12 5.373 12 12"/><line x1="18" y1="20" x2="18" y2="30"/></svg></div>
+      <div class="svc-name">Détailing Esthétique</div>
+      <div class="svc-desc">Shampoing sièges cuir, moquettes, polissage, correction de peinture — finition concours.</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-n">04</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="6" y="12" width="24" height="14" rx="2"/><path d="M10 8l4 4M22 8l4 4"/><path d="M6 19h30"/><circle cx="11" cy="26" r="3"/><circle cx="25" cy="26" r="3"/></svg></div>
+      <div class="svc-name">Moto & Scooter</div>
+      <div class="svc-desc">Nettoyage spécialisé deux-roues, pièces mécaniques, protection contre les intempéries.</div>
+    </div>
+    <div class="svc-card reveal d1">
+      <div class="svc-n">05</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="3" y="14" width="30" height="12" rx="2"/><path d="M3 19h33"/><path d="M6 8l3 6M15 8v6M21 8v6M27 8l3 6"/><circle cx="8" cy="26" r="3"/><circle cx="28" cy="26" r="3"/></svg></div>
+      <div class="svc-name">Poids Lourd & Utilitaire</div>
+      <div class="svc-desc">Nettoyage haute pression industriel, traitement cabine, flottes professionnelles.</div>
+    </div>
+    <div class="svc-card reveal d2" style="background:rgba(201,168,76,.05);border-color:rgba(201,168,76,.2)">
+      <div class="svc-n" style="color:rgba(201,168,76,.3)">06</div>
+      <div class="svc-icon"><svg viewBox="0 0 36 36" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="18" cy="18" r="6"/><path d="M18 4v4M18 28v4M4 18h4M28 18h4M7.76 7.76l2.83 2.83M25.41 25.41l2.83 2.83M7.76 28.24l2.83-2.83M25.41 10.59l2.83-2.83"/></svg></div>
+      <div class="svc-name" style="color:var(--gold)">Rénovation Optique</div>
+      <div class="svc-desc">Phares jaunis remis à neuf, résultat crystal clear garanti. Traitement durable.</div>
+    </div>
+  </div>
+</section>
+
+<!-- RÉALISATIONS -->
+<section class="cars-sec" id="realisations">
+  <div class="cars-head">
+    <div class="sec-label reveal">Vu sur Facebook · #DGC67</div>
+    <h2 class="sec-title reveal">Nos <span class="g">Réalisations</span></h2>
+  </div>
+  <div class="cars-scroll">
+
+    <!-- VW T5 -->
+    <div class="car-card car-card-1 car-card-featured">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:60px;height:30px;background:radial-gradient(ellipse,rgba(255,140,30,.4),transparent);right:10%;top:55%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g1" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3a2010"/><stop offset="100%" stop-color="#150c05"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="230" ry="8" fill="rgba(255,100,20,0.1)"/>
+        <path d="M30 138 L44 108 L72 94 L130 80 L190 70 L250 65 L310 62 L370 64 L420 72 L458 88 L472 112 L476 138Z" fill="url(#g1)"/>
+        <path d="M130 80 L150 62 L185 50 L250 45 L315 47 L355 55 L375 65 L340 70 L280 66 L220 66 L170 70Z" fill="rgba(45,28,10,0.95)"/>
+        <path d="M158 64 L180 47 L250 40 L318 43 L340 54 L305 60 L250 56 L195 58Z" fill="rgba(255,80,10,0.15)" stroke="rgba(255,100,20,0.4)" stroke-width=".8"/>
+        <path d="M32 128 L474 126" fill="none" stroke="rgba(255,140,30,0.4)" stroke-width="1.2"/>
+        <path d="M450 104 L468 102 L474 116 L455 118Z" fill="rgba(255,140,30,0.25)" stroke="rgba(255,160,40,0.6)" stroke-width=".8"/>
+        <circle cx="118" cy="141" r="28" fill="#0d0a05" stroke="rgba(255,120,20,0.5)" stroke-width="1.8"/>
+        <circle cx="118" cy="141" r="14" fill="#080604" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="118" y1="127" x2="118" y2="137" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="118" y1="145" x2="118" y2="155" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="104" y1="141" x2="114" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="122" y1="141" x2="132" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="118" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="382" cy="141" r="28" fill="#0d0a05" stroke="rgba(255,120,20,0.5)" stroke-width="1.8"/>
+        <circle cx="382" cy="141" r="14" fill="#080604" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="382" y1="127" x2="382" y2="137" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="382" y1="145" x2="382" y2="155" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="368" y1="141" x2="378" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="386" y1="141" x2="396" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="382" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🇩🇪 Volkswagen</div>
+        <div class="car-name">T5</div>
+        <div class="car-service">Intérieur + extérieur</div>
+        <div class="car-tag">COMPLET</div>
+      </div>
+    </div>
+
+    <!-- Mercedes S500 -->
+    <div class="car-card car-card-2">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:50px;height:24px;background:radial-gradient(ellipse,rgba(100,160,255,.35),transparent);right:12%;top:52%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#101828"/><stop offset="100%" stop-color="#060c14"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="220" ry="8" fill="rgba(30,80,180,0.08)"/>
+        <path d="M45 138 L58 110 L90 95 L145 83 L200 74 L255 70 L315 68 L370 70 L418 80 L452 95 L466 116 L469 138Z" fill="url(#g2)"/>
+        <path d="M145 83 L160 68 L195 58 L255 54 L315 56 L350 64 L370 74 L338 78 L280 74 L225 74 L178 78Z" fill="rgba(12,20,36,0.95)"/>
+        <path d="M165 70 L195 56 L255 50 L315 52 L345 62 L310 68 L255 64 L198 66Z" fill="rgba(20,60,180,0.15)" stroke="rgba(60,120,220,0.3)" stroke-width=".8"/>
+        <path d="M46 128 L468 126" fill="none" stroke="rgba(80,140,220,0.4)" stroke-width="1.2"/>
+        <path d="M448 106 L464 104 L469 118 L452 120Z" fill="rgba(80,140,220,0.2)" stroke="rgba(100,160,240,0.5)" stroke-width=".8"/>
+        <circle cx="128" cy="141" r="27" fill="#080c14" stroke="rgba(80,140,220,0.5)" stroke-width="1.8"/>
+        <circle cx="128" cy="141" r="13" fill="#050810" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="128" y1="128" x2="128" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="128" y1="144" x2="128" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="115" y1="141" x2="125" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="131" y1="141" x2="141" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="128" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="375" cy="141" r="27" fill="#080c14" stroke="rgba(80,140,220,0.5)" stroke-width="1.8"/>
+        <circle cx="375" cy="141" r="13" fill="#050810" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="375" y1="128" x2="375" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="375" y1="144" x2="375" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="362" y1="141" x2="372" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="379" y1="141" x2="389" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="375" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🇩🇪 Mercedes-Benz</div>
+        <div class="car-name">S500</div>
+        <div class="car-service">Préparation extérieure</div>
+        <div class="car-tag">EXTÉRIEUR</div>
+      </div>
+    </div>
+
+    <!-- BMW Série 3 -->
+    <div class="car-card car-card-3">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:44px;height:22px;background:radial-gradient(ellipse,rgba(220,220,220,.25),transparent);right:12%;top:54%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1e1e1e"/><stop offset="100%" stop-color="#0a0a0a"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="215" ry="7" fill="rgba(180,180,180,0.07)"/>
+        <path d="M55 138 L68 112 L100 96 L155 82 L210 72 L265 68 L330 66 L385 68 L430 78 L458 94 L470 116 L472 138Z" fill="url(#g3)"/>
+        <path d="M155 82 L168 66 L200 56 L265 52 L325 54 L362 62 L382 72 L350 76 L285 72 L230 72 L182 76Z" fill="rgba(24,24,24,0.95)"/>
+        <path d="M180 68 L210 48 L265 42 L325 44 L358 56 L320 64 L265 60 L210 62Z" fill="rgba(160,160,160,0.15)" stroke="rgba(200,200,200,0.3)" stroke-width=".8"/>
+        <path d="M56 128 L471 126" fill="none" stroke="rgba(180,180,180,0.35)" stroke-width="1.2"/>
+        <path d="M452 106 L466 104 L471 118 L455 120Z" fill="rgba(180,180,180,0.15)" stroke="rgba(200,200,200,0.4)" stroke-width=".8"/>
+        <circle cx="130" cy="141" r="26" fill="#0a0a0a" stroke="rgba(180,180,180,0.4)" stroke-width="1.8"/>
+        <circle cx="130" cy="141" r="13" fill="#080808" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="130" y1="128" x2="130" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="130" y1="144" x2="130" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="117" y1="141" x2="127" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="133" y1="141" x2="143" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="130" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="368" cy="141" r="26" fill="#0a0a0a" stroke="rgba(180,180,180,0.4)" stroke-width="1.8"/>
+        <circle cx="368" cy="141" r="13" fill="#080808" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="368" y1="128" x2="368" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="368" y1="144" x2="368" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="355" y1="141" x2="365" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="371" y1="141" x2="381" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="368" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🇩🇪 BMW</div>
+        <div class="car-name">Série 3</div>
+        <div class="car-service">Nettoyage intérieur</div>
+        <div class="car-tag">INTÉRIEUR</div>
+      </div>
+    </div>
+
+    <!-- Jaguar F-Pace -->
+    <div class="car-card car-card-4">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:46px;height:22px;background:radial-gradient(ellipse,rgba(80,220,140,.3),transparent);right:12%;top:53%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g4" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0e1a12"/><stop offset="100%" stop-color="#050c08"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="215" ry="7" fill="rgba(30,180,90,0.07)"/>
+        <path d="M48 138 L60 110 L90 95 L148 82 L205 72 L258 68 L315 66 L372 68 L420 78 L454 94 L467 116 L470 138Z" fill="url(#g4)"/>
+        <path d="M148 82 L162 66 L200 55 L258 51 L318 53 L355 62 L375 72 L342 76 L280 72 L225 72 L178 76Z" fill="rgba(10,20,14,0.95)"/>
+        <path d="M168 68 L198 55 L258 48 L318 50 L350 60 L314 66 L258 62 L202 64Z" fill="rgba(20,180,80,0.1)" stroke="rgba(40,180,90,0.3)" stroke-width=".8"/>
+        <path d="M49 128 L469 126" fill="none" stroke="rgba(40,180,90,0.35)" stroke-width="1.2"/>
+        <path d="M450 106 L464 104 L469 118 L453 120Z" fill="rgba(40,180,90,0.15)" stroke="rgba(60,200,100,0.4)" stroke-width=".8"/>
+        <circle cx="124" cy="141" r="26" fill="#060c08" stroke="rgba(40,180,90,0.4)" stroke-width="1.8"/>
+        <circle cx="124" cy="141" r="13" fill="#040a06" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="124" y1="128" x2="124" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="124" y1="144" x2="124" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="111" y1="141" x2="121" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="127" y1="141" x2="137" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="124" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="372" cy="141" r="26" fill="#060c08" stroke="rgba(40,180,90,0.4)" stroke-width="1.8"/>
+        <circle cx="372" cy="141" r="13" fill="#040a06" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="372" y1="128" x2="372" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="372" y1="144" x2="372" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="359" y1="141" x2="369" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="376" y1="141" x2="386" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="372" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Jaguar</div>
+        <div class="car-name">F-Pace</div>
+        <div class="car-service">Préparation complète</div>
+        <div class="car-tag">PREMIUM</div>
+      </div>
+    </div>
+
+    <!-- Audi A3 -->
+    <div class="car-card car-card-5">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:50px;height:24px;background:radial-gradient(ellipse,rgba(255,80,40,.35),transparent);right:10%;top:52%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g5" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#200808"/><stop offset="100%" stop-color="#0a0303"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="225" ry="8" fill="rgba(220,30,20,0.09)"/>
+        <path d="M35 138 L48 108 L78 92 L136 78 L194 68 L252 63 L312 61 L368 63 L418 72 L455 88 L470 112 L474 138Z" fill="url(#g5)"/>
+        <path d="M136 78 L152 62 L188 50 L252 45 L314 47 L352 56 L372 67 L338 71 L276 67 L222 67 L174 71Z" fill="rgba(28,8,8,0.95)"/>
+        <path d="M156 64 L184 50 L252 44 L314 46 L346 57 L310 63 L252 59 L196 61Z" fill="rgba(220,30,20,0.18)" stroke="rgba(240,50,30,0.4)" stroke-width=".8"/>
+        <path d="M36 128 L473 126" fill="none" stroke="rgba(220,50,30,0.4)" stroke-width="1.2"/>
+        <path d="M452 104 L468 102 L473 117 L456 119Z" fill="rgba(220,50,30,0.2)" stroke="rgba(240,80,50,0.6)" stroke-width=".8"/>
+        <circle cx="120" cy="141" r="27" fill="#0a0303" stroke="rgba(220,50,30,0.5)" stroke-width="1.8"/>
+        <circle cx="120" cy="141" r="13" fill="#080202" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="120" y1="128" x2="120" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="120" y1="144" x2="120" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="107" y1="141" x2="117" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="123" y1="141" x2="133" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="120" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="378" cy="141" r="27" fill="#0a0303" stroke="rgba(220,50,30,0.5)" stroke-width="1.8"/>
+        <circle cx="378" cy="141" r="13" fill="#080202" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="378" y1="128" x2="378" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="378" y1="144" x2="378" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="365" y1="141" x2="375" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="382" y1="141" x2="392" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="378" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🇩🇪 Audi</div>
+        <div class="car-name">A3</div>
+        <div class="car-service">Rénovation optique</div>
+        <div class="car-tag">OPTIQUE</div>
+      </div>
+    </div>
+
+    <!-- VW Golf 8 GTI -->
+    <div class="car-card car-card-6">
+      <div class="car-bg"></div>
+      <div class="car-light" style="width:46px;height:22px;background:radial-gradient(ellipse,rgba(201,168,76,.3),transparent);right:12%;top:53%"></div>
+      <svg class="car-card-svg" viewBox="0 0 500 180" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g6" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1a1608"/><stop offset="100%" stop-color="#0a0902"/></linearGradient></defs>
+        <ellipse cx="250" cy="172" rx="215" ry="7" fill="rgba(201,168,76,0.1)"/>
+        <path d="M48 138 L60 110 L90 95 L148 82 L205 72 L258 68 L315 66 L372 68 L420 78 L454 94 L467 116 L470 138Z" fill="url(#g6)"/>
+        <path d="M148 82 L162 66 L200 55 L258 51 L318 53 L355 62 L375 72 L342 76 L280 72 L225 72 L178 76Z" fill="rgba(20,18,8,0.95)"/>
+        <path d="M168 68 L198 55 L258 48 L318 50 L350 60 L314 66 L258 62 L202 64Z" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.35)" stroke-width=".8"/>
+        <path d="M49 128 L469 126" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+        <path d="M450 106 L464 104 L469 118 L453 120Z" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.5)" stroke-width=".8"/>
+        <circle cx="124" cy="141" r="26" fill="#0a0902" stroke="rgba(201,168,76,0.5)" stroke-width="1.8"/>
+        <circle cx="124" cy="141" r="13" fill="#080701" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="124" y1="128" x2="124" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="124" y1="144" x2="124" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="111" y1="141" x2="121" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="127" y1="141" x2="137" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="124" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+        <circle cx="372" cy="141" r="26" fill="#0a0902" stroke="rgba(201,168,76,0.5)" stroke-width="1.8"/>
+        <circle cx="372" cy="141" r="13" fill="#080701" stroke="rgba(201,168,76,0.6)" stroke-width="1.2"/>
+        <line x1="372" y1="128" x2="372" y2="138" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="372" y1="144" x2="372" y2="154" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <line x1="359" y1="141" x2="369" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/><line x1="376" y1="141" x2="386" y2="141" stroke="rgba(201,168,76,0.8)" stroke-width="2"/>
+        <circle cx="372" cy="141" r="4" fill="rgba(201,168,76,1)"/>
+      </svg>
+      <div class="car-deco"></div>
+      <div class="car-card-overlay"></div>
+      <div class="car-info">
+        <div class="car-brand">🇩🇪 Volkswagen</div>
+        <div class="car-name">Golf 8 GTI</div>
+        <div class="car-service">Préparation complète</div>
+        <div class="car-tag">COMPLET</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FORMULES -->
+<section class="sec formules-sec" id="formules">
+  <div class="sec-label reveal">Tarification</div>
+  <h2 class="sec-title reveal">Nos <span class="g">Formules</span></h2>
+  <p class="reveal" style="font-size:16px;font-style:italic;font-weight:300;color:var(--grey);max-width:500px;">Sur devis selon l'état et le type de véhicule. Contactez-nous pour un tarif personnalisé.</p>
+  <div class="formules-grid">
+    <div class="formule-card reveal">
+      <div class="formule-num">01</div>
+      <div class="formule-name">Intérieur Express</div>
+      <ul class="formule-items">
+        <li>Aspiration complète</li>
+        <li>Plastiques nettoyés</li>
+        <li>Vitres intérieures</li>
+      </ul>
+      <div class="formule-price">Sur <small>devis</small></div>
+    </div>
+    <div class="formule-card featured reveal d1">
+      <div class="formule-num">02</div>
+      <div class="formule-name">Confort Complet</div>
+      <ul class="formule-items">
+        <li>Nettoyage intérieur complet</li>
+        <li>Shampoing sièges + moquettes</li>
+        <li>Extérieur détaillé</li>
+        <li>Jantes et pneus</li>
+      </ul>
+      <div class="formule-price">Sur <small>devis</small></div>
+    </div>
+    <div class="formule-card reveal d2">
+      <div class="formule-num">03</div>
+      <div class="formule-name">Préparation Total</div>
+      <ul class="formule-items">
+        <li>Tout le Confort Complet</li>
+        <li>Détachage sièges cuir</li>
+        <li>Finition showroom</li>
+        <li>Rénovation optique incluse</li>
+      </ul>
+      <div class="formule-price">Sur <small>devis</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec process-sec" id="processus">
+  <div class="sec-label reveal">Comment ça marche</div>
+  <h2 class="sec-title reveal">Notre <span class="g">Processus</span></h2>
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <div class="process-num">ÉTAPE 01</div>
+      <div class="process-name">Contact</div>
+      <div class="process-desc">Appelle-nous au 06.51.14.00.08 ou via Snapchat DalsGamos67. Décris ton véhicule.</div>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-step reveal d1">
+      <div class="process-num">ÉTAPE 02</div>
+      <div class="process-name">Diagnostic</div>
+      <div class="process-desc">Évaluation de l'état du véhicule. Devis personnalisé gratuit et sans engagement.</div>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-step reveal d2">
+      <div class="process-num">ÉTAPE 03</div>
+      <div class="process-name">Traitement</div>
+      <div class="process-desc">On intervient avec les produits et techniques les plus performants du marché.</div>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-step reveal d3">
+      <div class="process-num">ÉTAPE 04</div>
+      <div class="process-name">Livraison</div>
+      <div class="process-desc">Véhicule restitué en état impeccable. Résultat showroom garanti.</div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-sec">
+  <p class="quote-text">« Ton véhicule mérite mieux. Quel que soit son état, DGC67 peut le transformer. »</p>
+  <div class="quote-author">DalsGamos Concept · 49 Rue du Gazon · Strasbourg · #DGC67</div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-grid" id="contact">
+  <div class="contact-left">
+    <div class="sec-label">Devis gratuit</div>
+    <h2 class="sec-title" style="font-size:clamp(38px,5vw,58px)">Contactez<br><span class="g">DGC67</span></h2>
+    <div class="contact-items">
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M22 17v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.8 19.8 0 01-3.07-8.68A2 2 0 012.18 0h3a2 2 0 012 1.72c.128 1 .36 1.98.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.56 6.56l1.27-1.27a2 2 0 012.11-.45c.83.4 1.81.63 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><div class="c-label">Téléphone</div><div class="c-val"><a href="tel:0651140008">06 51 14 00 08</a></div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+        <div><div class="c-label">Email</div><div class="c-val"><a href="mailto:dalsgamosconcept67@gmail.com">dalsgamosconcept67@gmail.com</a></div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg></div>
+        <div><div class="c-label">Snapchat</div><div class="c-val">DalsGamos67</div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><div class="c-label">Adresse</div><div class="c-val">49 Rue du Gazon<br>67200 Strasbourg</div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+        <div><div class="c-label">Paiement</div><div class="c-val">Carte de débit · Sans contact accepté</div></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></div>
+        <div><div class="c-label">Réseaux</div><div class="c-val">Facebook & Instagram<br>@DalsGamosConcept67</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="contact-right">
+    <div class="form-title">Demandez<br>Votre Devis</div>
+    <div class="fg"><label>Prénom</label><input type="text" placeholder="Ton prénom"/></div>
+    <div class="fg"><label>Téléphone</label><input type="tel" placeholder="Pour te rappeler"/></div>
+    <div class="fg"><label>Ton véhicule</label><input type="text" placeholder="Ex: BMW Série 3, Mercedes CLA..."/></div>
+    <div class="fg">
+      <label>Prestation</label>
+      <select>
+        <option value="" disabled selected>Choisir une prestation</option>
+        <option>Nettoyage intérieur</option>
+        <option>Préparation complète</option>
+        <option>Rénovation optique</option>
+        <option>Moto / Scooter</option>
+        <option>Poids lourd / Utilitaire</option>
+        <option>Autre</option>
+      </select>
+    </div>
+    <div class="fg"><label>Message</label><textarea placeholder="Décris l'état de ton véhicule..."></textarea></div>
+    <button class="btn-dark" onclick="this.textContent='✓ Envoyé — On te rappelle vite !'">Envoyer la demande</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">DGC · 67</div>
+  <div class="foot-links-nav">
+    <a href="#services">Services</a>
+    <a href="#realisations">Réals</a>
+    <a href="#formules">Formules</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="foot-copy">© 2026 Dals Gamos Concept · Strasbourg · 67<br>Nettoyage Automobile Professionnel</div>
+  <div class="foot-social">
+    <a href="https://www.facebook.com/DalsGamosConcept67/" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+    </a>
+    <a href="tel:0651140008">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><path d="M22 17v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.8 19.8 0 01-3.07-8.68A2 2 0 012.18 0h3a2 2 0 012 1.72c.13 1 .36 1.98.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.56 6.56l1.27-1.27a2 2 0 012.11-.45c.83.4 1.81.63 2.81.7A2 2 0 0122 16.92z"/></svg>
+    </a>
+    <a href="mailto:dalsgamosconcept67@gmail.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+    </a>
+  </div>
+</footer>
+
+<!-- BOUTON APPEL FLOTTANT -->
+<a class="call-float" href="tel:0651140008">📞 06 51 14 00 08</a>
+
+<script>
+  const cur = document.getElementById('cur'), ring = document.getElementById('ring');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px';
+    setTimeout(() => { ring.style.left = e.clientX+'px'; ring.style.top = e.clientY+'px'; }, 80);
+  });
+  document.querySelectorAll('a,button,.svc-card,.car-card,.formule-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.transform='translate(-50%,-50%) scale(2)'; ring.style.transform='translate(-50%,-50%) scale(1.8)'; ring.style.borderColor='rgba(201,168,76,.9)'; });
+    el.addEventListener('mouseleave', () => { cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.transform='translate(-50%,-50%) scale(1)'; ring.style.borderColor='rgba(201,168,76,.5)'; });
+  });
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('on'); }), { threshold:.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 60 ? 'rgba(4,4,4,.97)' : 'linear-gradient(to bottom,rgba(4,4,4,.96),transparent)';
+  });
+  window.addEventListener('scroll', () => {
+    const car = document.querySelector('.hero-car');
+    const glow = document.querySelector('.hero-glow');
+    if(car) car.style.transform = `translateY(${-window.scrollY*.12}px)`;
+    if(glow) glow.style.transform = `translateY(${-window.scrollY*.08}px)`;
+  });
+</script>
+</body>
+</html>
